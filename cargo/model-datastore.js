@@ -108,7 +108,8 @@ function list (kind,limit, token, cb) {
     console.log(kind);
     //    console.log([kind]);
     if (kind == "Cargo")
-        var q = ds.createQuery([kind]).limit(limit).order('content').start(token);
+        var q = ds.createQuery([kind]).limit(limit).filter('carrier.id', '=', null);
+//        var q = ds.createQuery([kind]).limit(limit).order('content').start(token);
     if (kind == "Ship")
         var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
 
@@ -208,7 +209,7 @@ function update (kind, id, data, cb) {
     ds.save(
             entity,
             (err) => {
-                data.id = entity.key.id;
+//                data.id = entity.key.id;
                 console.log(data.id);
                 data.self = "http://localhost:8080/api/cargo/"+entity.key.id;
                 console.log(key);
