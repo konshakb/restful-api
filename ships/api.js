@@ -99,6 +99,34 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.get('/:ship/cargo', (req, res, next) => {
+    
+    
+    getModel().lists(cargo, req.params.ship, 3, req.query.pageToken, (err, entities, cursor) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        //    console.log(entities[0].name);
+
+        //  var sort = sortObject(entities);
+//        var sort = sorting(entities);
+        JSON.stringify(entities);
+//        console.log(req.query.cursor);
+        if(cursor) {
+            cursor=encodeURIComponent(cursor);
+        console.log(req.get("host"));
+        console.log(req.baseUrl);
+        console.log("yeah you already know!!");
+        var next = "?pageToken=";
+        cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+        }
+        res.json({
+            items: entities,
+            nextPageToken: cursor
+        });
+    });
+});
 router.put('/:ship/cargo/:cargo', (req, res, next) => {
     console.log(req.params.cargo);
     console.log(req.params.ship);

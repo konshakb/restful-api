@@ -117,6 +117,19 @@ function listing (number, kind, limit, token, cb) {
         cb(null, entities.map(fromDatastore), hasMore);
     });
 }
+function lists (kind, id, limit, token, cb) {
+    const q = ds.createQuery([kind]).limit(limit).filter('carrier.id', '=', id);
+    console.log(q);
+
+    ds.runQuery(q, (err, entities, nextQuery) => {
+        if (err) {
+            cb(err);
+            return;
+        }
+        const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
+        cb(null, entities.map(fromDatastore), hasMore);
+    });
+}
 // Creates a new ship or updates an existing ship with new data. The provided
 // data is automatically translated into Datastore format. The ship will be
 // queued for background processing.
@@ -239,6 +252,7 @@ function _deletes (id, cb) {
 
 // [START exports]
 module.exports = {
+    lists,
     listing,
     reads,
     create,
