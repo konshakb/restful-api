@@ -108,7 +108,8 @@ function list (kind,limit, token, cb) {
     console.log(kind);
     //    console.log([kind]);
     if (kind == "Cargo")
-        var q = ds.createQuery([kind]).limit(limit).filter('carrier.id', '=', null);
+        var test= "5114353707646976";
+        var q = ds.createQuery([kind]).limit(limit).filter('carrier.id', '=', test);
 //        var q = ds.createQuery([kind]).limit(limit).order('content').start(token);
     if (kind == "Ship")
         var q = ds.createQuery([kind]).limit(limit).order('name').start(token);

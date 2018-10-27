@@ -160,13 +160,14 @@ function update (id, data, cb) {
 }
 function updates (kind2, id, data, cb) {
     let key;
+    console.log(kind2);
     if (id) {
         key = ds.key([kind2, parseInt(id, 10)]);
     } else {
         key = ds.key(kind2);
     }
 
-    const entity = {
+    var entity = {
         key: key,
         data: toDatastore(data, ['description'])
     };
@@ -174,21 +175,10 @@ function updates (kind2, id, data, cb) {
     ds.save(
             entity,
             (err) => {
-                data.id = entity.key.id;
-                data.self = "http://localhost:8080/api/ships/"+entity.key.id;
-                key = ds.key([kind, parseInt(entity.key.id, 10)]);
-                entity = {
-                    key: key,
-        data: toDatastore(data, ['description'])
-                };
-                ds.save(
-                    entity,
-                    (err) => {
-                        data.id = entity.key.id;
-                        console.log(data.id);
+          //      data.id = entity.key.id;
+          //      data.self = "http://localhost:8080/api/ships/"+entity.key.id;
+           //     key = ds.key([kind, parseInt(entity.key.id, 10)]);
                         cb(err, err ? null : data);
-                    }
-                    );
             }
            );
 }

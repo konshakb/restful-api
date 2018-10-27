@@ -17,6 +17,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ship = 'Ship';
 const slip = 'Slip';
+const cargo = 'Cargo';
 
 function getModel () {
     return require(`./model-${require('../config').get('DATA_BACKEND')}`);
@@ -98,6 +99,59 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.put('/:ship/cargo/:cargo', (req, res, next) => {
+    console.log(req.params.cargo);
+    console.log(req.params.ship);
+    let delivery_date = req.body.delivery_date
+   // console.log(date);
+   // console.log(isValidDate(date));
+    getModel().reads(cargo, req.params.cargo, (err, entity) => {
+    if (err) {
+        next(err);
+        return;
+    }
+    console.log(req.params.cargo);
+    // console.log(obj);
+    var testing = (JSON.stringify(entity));
+    var obj = JSON.parse(testing);
+    // console.log(data.date)
+    console.log(obj.weight);
+    console.log(obj.content);
+    //console.log(obj.number);//number of the ship
+    if(obj.delivery_date===null){
+    getModel().reads(ship, req.params.ship, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+    //    res.json(entity);
+        var shipping = (JSON.stringify(entity));
+    var shipobj = JSON.parse(shipping);
+        const new_cargo = {"carrier": {"id": shipobj.id, "self":shipobj.self, "name": shipobj.name},"weight": obj.weight, "delivery_date": delivery_date, "content": obj.content, "self": obj.self}
+        //const new_cargo = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.ship}
+                getModel().updates(cargo, req.params.cargo, new_cargo, (err, entity) => {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                    res.json(entity);
+                    const new_ship = {"name": shipobj.name, "type": shipobj.type, "length": shipobj.length, "cargo": shipobj.cargo, "self": shipobj.self};
+                    var cargoship = {"id": obj.id, "self": obj.self};
+                    new_ship.cargo.push(cargoship);
+                getModel().updates(ship, req.params.ship, new_ship, (err, entity) => {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                });
+                });
+        //res.json(entity);
+        });
+    }
+    else
+        return res.status(403).end("Cargo already on ship");
+});
+});
 /**
  * POST /api/ships
  *

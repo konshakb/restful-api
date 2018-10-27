@@ -80,11 +80,11 @@ router.get('/', (req, res, next) => {
         JSON.stringify(entities);
         if(cursor) {
             cursor=encodeURIComponent(cursor);
-        console.log(req.get("host"));
-        console.log(req.baseUrl);
-        console.log("yeah you already know!!");
-        var next = "?pageToken=";
-        cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+            console.log(req.get("host"));
+            console.log(req.baseUrl);
+            console.log("yeah you already know!!");
+            var next = "?pageToken=";
+            cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
         }
 
         res.json({
@@ -117,7 +117,7 @@ router.post('/', (req, res, next) => {
     }
     else {
         new_cargo.carrier={"id": null, "name": null, "self": null};
-        
+
         getModel().create(cargo, new_cargo, (err, entity) => {
             if (err) {
                 next(err);
@@ -180,12 +180,11 @@ router.put('/:cargo/ship/:ship', (req, res, next) => {
     console.log(req.params.ship);
     let date = req.body.arrival_date
     console.log(date);
-console.log(isValidDate(date));
-if(isValidDate(date))
+    console.log(isValidDate(date));
+    if(isValidDate(date))
     console.log('Valid date');
-else return res.status(403).end("Invalid date:  DD/MM/YYYY");
-//isValidDate(dateString)
-getModel().read(cargo, req.params.cargo, (err, entity) => {
+    else return res.status(403).end("Invalid date:  DD/MM/YYYY");
+    getModel().read(cargo, req.params.cargo, (err, entity) => {
     if (err) {
         next(err);
         return;
@@ -276,7 +275,9 @@ router.delete('/:cargo/ship/:ship', (req, res, next) => {
 router.put('/:cargo', (req, res, next) => {
     console.log(req.params.cargo);
     console.log(req.body);
-    let number=req.body.number;
+    //let number=req.body.number;
+    let weight = req.body.weight;
+    let content = req.body.content
 
     getModel().read(cargo, req.params.cargo, (err, entity) => {
         if (err) {
@@ -286,18 +287,19 @@ router.put('/:cargo', (req, res, next) => {
         //    res.json(entity);
         var testing = (JSON.stringify(entity));
         var obj = JSON.parse(testing);
-        const new_cargo = {"number": req.body.number, "arrival_date": obj.arrival_date, "current_boat": obj.current_boat}
-        if (!number || isNaN(number) ) {
-            return res.status(400).end("request must include number");
+        //const new_cargo = {"number": req.body.number, "arrival_date": obj.arrival_date, "current_boat": obj.current_boat}
+        const new_cargo = {"self": obj.self, "weight": req.body.weight, "delivery_date": obj.delivery_date, "content": req.body.content, "carrier": obj.carrier}
+        if (!weight || !content)  {
+            return res.status(400).end("request must include updated weight and updated content");
         }
         else {
-            getModel().lists(number, cargo,10, req.query.pageToken, (err, entities, cursor) => {
-                if (err) {
-                    next(err);
-                    return;
-                }
-                console.log(Object.keys(entities));
-                if(Object.keys(entities).length===0){
+           // getModel().lists(number, cargo,10, req.query.pageToken, (err, entities, cursor) => {
+             //   if (err) {
+               //     next(err);
+                 //   return;
+              //  }
+              //  console.log(Object.keys(entities));
+              //  if(Object.keys(entities).length===0){
                     getModel().update(cargo, req.params.cargo, new_cargo, (err, entity) => {
                         if (err) {
                             next(err);
@@ -306,12 +308,12 @@ router.put('/:cargo', (req, res, next) => {
                         res.json(entity);
                     });
                 }
-                else
-                return res.status(400).end("Slip number already created");
+                //else
+                //return res.status(400).end("Slip number already created");
             });
-        }
+       // }
 
-    });
+   // });
 });
 /*
    router.put('/:cargo', (req, res, next) => {
