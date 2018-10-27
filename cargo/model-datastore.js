@@ -18,7 +18,7 @@ const config = require('../config');
 
 // [START config]
 const ds = Datastore({
-  projectId: config.get('GCLOUD_PROJECT')
+    projectId: config.get('GCLOUD_PROJECT')
 });
 //const kind = 'Slip';
 //const kind2 = 'Slip';
@@ -41,8 +41,8 @@ const ds = Datastore({
 //     property: value
 //   }
 function fromDatastore (obj) {
-  obj.id = obj[Datastore.KEY].id;
-  return obj;
+    obj.id = obj[Datastore.KEY].id;
+    return obj;
 }
 
 // Translates from the application's format to the datastore's
@@ -69,34 +69,34 @@ function fromDatastore (obj) {
 //     }
 //   ]
 function toDatastore (obj, nonIndexed) {
-  nonIndexed = nonIndexed || [];
-  const results = [];
-  Object.keys(obj).forEach((k) => {
-    if (obj[k] === undefined) {
-      return;
-    }
-    results.push({
-      name: k,
-      value: obj[k],
-      excludeFromIndexes: nonIndexed.indexOf(k) !== -1
+    nonIndexed = nonIndexed || [];
+    const results = [];
+    Object.keys(obj).forEach((k) => {
+        if (obj[k] === undefined) {
+            return;
+        }
+        results.push({
+            name: k,
+            value: obj[k],
+            excludeFromIndexes: nonIndexed.indexOf(k) !== -1
+        });
     });
-  });
-  return results;
+    return results;
 }
 function shipQuery(ships) {
     console.log(ships);
     console.log([ships]);
     const q = ds.createQuery(ships);
-  ds.runQuery(q, (err, entities, nextQuery) => {
-    if (err) {
-      cb(err);
-      return;
-    }
-    const ship = entities.filter('name', 'new boats 2');
-    console.log(entities);
-    cb(null, entities.map(fromDatastore));
-  });
-   // return ship;
+    ds.runQuery(q, (err, entities, nextQuery) => {
+        if (err) {
+            cb(err);
+            return;
+        }
+        const ship = entities.filter('name', 'new boats 2');
+        console.log(entities);
+        cb(null, entities.map(fromDatastore));
+    });
+    // return ship;
 }
 
 // Lists all ships in the Datastore sorted alphabetically by title.
@@ -106,141 +106,168 @@ function shipQuery(ships) {
 // [START list]
 function list (kind,limit, token, cb) {
     console.log(kind);
-//    console.log([kind]);
-if (kind == "Cargo")
-  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
-if (kind == "Ship")
-  var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
+    //    console.log([kind]);
+    if (kind == "Cargo")
+        var q = ds.createQuery([kind]).limit(limit).order('content').start(token);
+    if (kind == "Ship")
+        var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
 
-  ds.runQuery(q, (err, entities, nextQuery) => {
-    if (err) {
-        console.log("there was an error");
-      cb(err);
-      return;
-    }
-    const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
-//  console.log(entities);
-    cb(null, entities.map(fromDatastore), hasMore);
-  });
+    ds.runQuery(q, (err, entities, nextQuery) => {
+        if (err) {
+            console.log("there was an error");
+            cb(err);
+            return;
+        }
+        const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
+        //  console.log(entities);
+        cb(null, entities.map(fromDatastore), hasMore);
+    });
 }
 // [END list]
 
 function lists (number, kind,limit, token, cb) {
     console.log(kind);
-//    console.log([kind]);
-if (kind == "Cargo"){
- console.log("testing with Cargo");
-//  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
-  var q = ds.createQuery([kind]).limit(limit).filter('number', '=', number);
- console.log(q);
-}
- // var q = ds.createQuery([kind]).limit(limit).filter('current_boat', '=', number);
-else if (kind == "Ship") {
-
-  //var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
-  var q = ds.createQuery([kind]).limit(limit).filter('length', '=', '18');
-}
-if(!q)
-console.log("testing");
-
-  ds.runQuery(q, (err, entities, nextQuery) => {
-    if (err) {
-      cb(err);
-      return;
+    //    console.log([kind]);
+    if (kind == "Cargo"){
+        console.log("testing with Cargo");
+        //  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
+        var q = ds.createQuery([kind]).limit(limit).filter('number', '=', number);
+        console.log(q);
     }
-    const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
-//  console.log(entities);
-    cb(null, entities.map(fromDatastore), hasMore);
-  });
+    // var q = ds.createQuery([kind]).limit(limit).filter('current_boat', '=', number);
+    else if (kind == "Ship") {
+
+        //var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
+        var q = ds.createQuery([kind]).limit(limit).filter('length', '=', '18');
+    }
+    if(!q)
+        console.log("testing");
+
+    ds.runQuery(q, (err, entities, nextQuery) => {
+        if (err) {
+            cb(err);
+            return;
+        }
+        const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
+        //  console.log(entities);
+        cb(null, entities.map(fromDatastore), hasMore);
+    });
 }
 function putlist (number, kind,limit, token, cb) {
     console.log(kind);
-//    console.log([kind]);
-if (kind == "Slip")
-//  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
-  var q = ds.createQuery([kind]).limit(limit).filter('number', '=', number);
- // var q = ds.createQuery([kind]).limit(limit).filter('current_boat', '=', number);
-else if (kind == "Ship") {
+    //    console.log([kind]);
+    if (kind == "Slip")
+        //  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
+        var q = ds.createQuery([kind]).limit(limit).filter('number', '=', number);
+    // var q = ds.createQuery([kind]).limit(limit).filter('current_boat', '=', number);
+    else if (kind == "Ship") {
 
-  //var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
-  var q = ds.createQuery([kind]).limit(limit).filter('length', '=', '18');
-}
-if(!q)
-    console.log("go fuck yourself");
-
-  ds.runQuery(q, (err, entities, nextQuery) => {
-    if (err) {
-      cb(err);
-      return;
+        //var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
+        var q = ds.createQuery([kind]).limit(limit).filter('length', '=', '18');
     }
-    const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
-//  console.log(entities);
-    cb(null, entities.map(fromDatastore), hasMore);
-  });
+    if(!q)
+        console.log("winning");
+
+    ds.runQuery(q, (err, entities, nextQuery) => {
+        if (err) {
+            cb(err);
+            return;
+        }
+        const hasMore = nextQuery.moreResults !== Datastore.NO_MORE_RESULTS ? nextQuery.endCursor : false;
+        //  console.log(entities);
+        cb(null, entities.map(fromDatastore), hasMore);
+    });
 }
 // Creates a new ship or updates an existing ship with new data. The provided
 // data is automatically translated into Datastore format. The ship will be
 // queued for background processing.
 // [START update]
 function update (kind, id, data, cb) {
-  let key;
-  if (id) {
-    key = ds.key([kind, parseInt(id, 10)]);
-  } else {
-    key = ds.key(kind);
-  }
-
-  const entity = {
-    key: key,
-    data: toDatastore(data, ['description'])
-  };
-
-  ds.save(
-    entity,
-    (err) => {
-      data.id = entity.key.id;
-      cb(err, err ? null : data);
+    let key;
+    if (id) {
+        key = ds.key([kind, parseInt(id, 10)]);
+    } else {
+        key = ds.key(kind);
     }
-  );
+    console.log(key);
+
+    var entity = {
+        key: key,
+        data: toDatastore(data, ['description'])
+    };
+    console.log(key);
+    //data.self = "http://localhost:8080/api/cargo/"+entity.key.id;
+    entity = {
+        key: key,
+        data: toDatastore(data, ['description'])
+    };
+    console.log(entity.key.id);
+    //data.self = "http://localhost:8080/api/cargo/"+entity.key.id;
+    key = ds.key([kind, parseInt(entity.key.id, 10)]);
+
+    ds.save(
+            entity,
+            (err) => {
+                data.id = entity.key.id;
+                console.log(data.id);
+                data.self = "http://localhost:8080/api/cargo/"+entity.key.id;
+                console.log(key);
+                key = ds.key([kind, parseInt(entity.key.id, 10)]);
+                entity = {
+                    key: key,
+        data: toDatastore(data, ['description'])
+                };
+                //           entity.key.self = "http://localhost:8080/api/cargo/"+entity.key.id;
+                //                cb(err, err ? null : data);
+                ds.save(
+                    entity,
+                    (err) => {
+                        data.id = entity.key.id;
+                        console.log(data.id);
+                        cb(err, err ? null : data);
+                    }
+                    );
+            }
+    );
 }
 // [END update]
 
 function create (kind, data, cb) {
     console.log(data);
-//    console.log("In the create function: cb = " +cb);
-  update(kind, null, data, cb);
+    //    console.log("In the create function: cb = " +cb);
+    update(kind, null, data, cb);
 }
 
 function read (kind, id, cb) {
-  const key = ds.key([kind, parseInt(id, 10)]);
-  ds.get(key, (err, entity) => {
-    if (!err && !entity) {
-      err = {
-        code: 404,
+    const key = ds.key([kind, parseInt(id, 10)]);
+    ds.get(key, (err, entity) => {
+        if (!err && !entity) {
+            err = {
+                code: 404,
         message: 'Not found'
-      };
-    }
-    if (err) {
-      cb(err);
-      return;
-    }
-    cb(null, fromDatastore(entity));
-  });
+            };
+        }
+        if (err) {
+            cb(err);
+            return;
+        }
+        cb(null, fromDatastore(entity));
+    });
 }
 
 function _delete (kind, id, cb) {
-  const key = ds.key([kind, parseInt(id, 10)]);
-  ds.delete(key, cb);
+    const key = ds.key([kind, parseInt(id, 10)]);
+    ds.delete(key, cb);
 }
 
 // [START exports]
 module.exports = {
-  shipQuery,
-  create,
-  read,
-  update,
-  delete: _delete,
-  list,
-  lists
+    shipQuery,
+    create,
+    read,
+    update,
+    delete: _delete,
+    list,
+    lists
 };
 // [END exports]

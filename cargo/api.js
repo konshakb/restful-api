@@ -70,7 +70,7 @@ router.use(bodyParser.json());
 router.get('/', (req, res, next) => {
     //  const ship =getModel().shipQuery(kind);
     //  removed the => and replaced with async and it worked.
-    getModel().list(cargo,10, req.query.pageToken, (err, entities, cursor) => {
+    getModel().list(cargo,3, req.query.pageToken, (err, entities, cursor) => {
         if (err) {
             next(err);
             return;
@@ -78,6 +78,14 @@ router.get('/', (req, res, next) => {
         ships=entities;
         console.log(entities);
         JSON.stringify(entities);
+        if(cursor) {
+            cursor=encodeURIComponent(cursor);
+        console.log(req.get("host"));
+        console.log(req.baseUrl);
+        console.log("yeah you already know!!");
+        var next = "?pageToken=";
+        cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+        }
 
         res.json({
             items: entities,
@@ -99,33 +107,23 @@ router.get('/', (req, res, next) => {
  * Create a new cargo.
  */
 router.post('/', (req, res, next) => {
-    let number=req.body.number;
+    let weight=req.body.weight;
+    let content=req.body.content;
     //let arrival_date=req.body.arrival;
-    const new_cargo = {"number": req.body.number, "arrival_date": null, "current_boat": null}
-    if (!number || isNaN(number) ) {
-        return res.status(400).end("request must include number");
+    const new_cargo = {"weight": req.body.weight, "delivery_date": null, "content": req.body.content}
+    //const new_cargo = {"number": req.body.number, "arrival_date": null, "current_boat": null}
+    if (!weight || isNaN(weight)||!content ) {
+        return res.status(400).end("request must weight (a number) and content");
     }
     else {
-        getModel().lists(number, cargo,10, req.query.pageToken, (err, entities, cursor) => {
+        new_cargo.carrier={"id": null, "name": null, "self": null};
+        
+        getModel().create(cargo, new_cargo, (err, entity) => {
             if (err) {
                 next(err);
                 return;
             }
-            console.log(Object.keys(entities));
-            if(Object.keys(entities).length===0){
-
-                //current_boat
-                //    console.log("here in the " + req.body);
-                getModel().create(cargo, new_cargo, (err, entity) => {
-                    if (err) {
-                        next(err);
-                        return;
-                    }
-                    res.json(entity);
-                });
-            }
-            else
-            return res.status(400).end("Slip number already created");
+            res.json(entity);
         });
     }
 });
@@ -182,50 +180,50 @@ router.put('/:cargo/ship/:ship', (req, res, next) => {
     console.log(req.params.ship);
     let date = req.body.arrival_date
     console.log(date);
-    console.log(isValidDate(date));
-    if(isValidDate(date))
+console.log(isValidDate(date));
+if(isValidDate(date))
     console.log('Valid date');
-    else return res.status(403).end("Invalid date:  DD/MM/YYYY");
-    //isValidDate(dateString)
-    getModel().read(cargo, req.params.cargo, (err, entity) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        // var obj = JSON.parse(entity);
-        // console.log(obj);
-        var testing = (JSON.stringify(entity));
-        var obj = JSON.parse(testing);
-        // console.log(data.date)
-        console.log(obj.number);
-        console.log(obj.name);
-        //console.log(obj.number);//number of the ship
-        if(obj.arrival_date===null&&obj.current_boat==null){
-            const new_cargo = {"number": obj.number, "arrival_date": date, "current_boat": req.params.ship}
-            getModel().lists(req.params.ship, cargo,10, req.query.pageToken, (err, entities, cursor) => {
-                if (err) {
-                    next(err);
-                    return;
-                }
-                console.log(Object.keys(entities));
-                if(Object.keys(entities).length===0){
-                    console.log("looks like we can proceed");
-                    getModel().update(cargo, req.params.cargo, new_cargo, (err, entity) => {
-                        if (err) {
-                            next(err);
-                            return;
-                        }
-                        res.json(entity);
-                    });
-                }
-                else
-                return res.status(400).end("Ship is already in cargo");
-            //res.json(entity);
-            });
-        }
-        else
-            return res.status(403).end("Slip currently occupied");
-    });
+else return res.status(403).end("Invalid date:  DD/MM/YYYY");
+//isValidDate(dateString)
+getModel().read(cargo, req.params.cargo, (err, entity) => {
+    if (err) {
+        next(err);
+        return;
+    }
+    // var obj = JSON.parse(entity);
+    // console.log(obj);
+    var testing = (JSON.stringify(entity));
+    var obj = JSON.parse(testing);
+    // console.log(data.date)
+    console.log(obj.number);
+    console.log(obj.name);
+    //console.log(obj.number);//number of the ship
+    if(obj.arrival_date===null&&obj.current_boat==null){
+        const new_cargo = {"number": obj.number, "arrival_date": date, "current_boat": req.params.ship}
+        getModel().lists(req.params.ship, cargo,10, req.query.pageToken, (err, entities, cursor) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            console.log(Object.keys(entities));
+            if(Object.keys(entities).length===0){
+                console.log("looks like we can proceed");
+                getModel().update(cargo, req.params.cargo, new_cargo, (err, entity) => {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                    res.json(entity);
+                });
+            }
+            else
+            return res.status(400).end("Ship is already in cargo");
+        //res.json(entity);
+        });
+    }
+    else
+        return res.status(403).end("Slip currently occupied");
+});
 });
 
 /**

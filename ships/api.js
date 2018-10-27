@@ -85,14 +85,10 @@ router.get('/', (req, res, next) => {
 //        console.log(req.query.cursor);
         if(cursor) {
             cursor=encodeURIComponent(cursor);
-//        cursor = cursor.slice(0, -1);
-        //console.log(cursor2);
         console.log(req.get("host"));
         console.log(req.baseUrl);
         console.log("yeah you already know!!");
         var next = "?pageToken=";
-      //  console.log(req.get("host"));
- //       console.log(entities[1].endCursor);
         cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
         }
         res.json({
@@ -113,9 +109,9 @@ router.post('/', (req, res, next) => {
     let length = req.body.length;
     const new_ship = {"name": req.body.name, "type": req.body.type, "length": req.body.length};
     new_ship.cargo= [];
-    for(var x=0;x<5;x++) {
-        new_ship.cargo.push(x);
-    }
+//    for(var x=0;x<5;x++) {
+//        new_ship.cargo.push(x);
+  //  }
     console.log(new_ship);
     //  console.log(req.body.length);
     if (!name || !type || !length) {
