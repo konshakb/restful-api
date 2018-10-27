@@ -138,7 +138,7 @@ function update (id, data, cb) {
     ds.save(
             entity,
             (err) => {
-                data.id = entity.key.id;
+        //        data.id = entity.key.id;
         //cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
         
                 data.self = "http://localhost:8080/api/ships/"+entity.key.id;
