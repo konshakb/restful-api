@@ -114,12 +114,13 @@ router.get('/:ship/cargo', (req, res, next) => {
         JSON.stringify(entities);
 //        console.log(req.query.cursor);
         if(cursor) {
+            console.log(cursor);
             cursor=encodeURIComponent(cursor);
         console.log(req.get("host"));
         console.log(req.baseUrl);
-        console.log("yeah you already know!!");
+        var root = "/cargo/"+req.params.ship+"/"
         var next = "?pageToken=";
-        cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+        cursor = req.protocol + "://"+req.get("host") + req.baseUrl +root+ next + cursor;
         }
         res.json({
             items: entities,
@@ -263,19 +264,23 @@ router.delete('/:ship', (req, res, next) => {
             next(err);
             return;
         }
-        getModel().listing(req.params.ship, slip, 10, req.query.pageToken, (err, entities, cursor) => {
+        getModel().lists(cargo, req.params.ship , 50, req.query.pageToken, (err, entities, cursor) => {
             if (err) {
                 next(err);
                 return;
             }
             console.log(Object.keys(entities).length) ;
             if(Object.keys(entities).length!=0) {
+              for (var x=0; x<Object.keys(entities).length; x++) {
                 var testing = (JSON.stringify(entities));
                 var obj = JSON.parse(testing);
                 console.log(obj[0].current_boat);
                 console.log(obj[0].id);
-                const new_slip = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
-                getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
+               // const new_cargo = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
+               // getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
+                const new_cargo = {"carrier": {"id": null, "self":null, "name": null},"weight": obj[x].weight, "delivery_date": null, "content": obj[x].content, "self": obj[x].self}
+        //const new_cargo = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.ship}
+                getModel().updates(cargo, obj[x].id, new_cargo, (err, entity) => {
                     if (err) {
                         next (err);
                         return ;
@@ -283,6 +288,7 @@ router.delete('/:ship', (req, res, next) => {
 
                 });
 
+                }
                 }
                 res.status(200).send('OK');
                 });

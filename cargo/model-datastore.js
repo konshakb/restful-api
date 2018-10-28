@@ -133,14 +133,14 @@ function lists (number, kind,limit, token, cb) {
     if (kind == "Cargo"){
         console.log("testing with Cargo");
         //  var q = ds.createQuery([kind]).limit(limit).order('number').start(token);
-        var q = ds.createQuery([kind]).limit(limit).filter('number', '=', number);
+        var q = ds.createQuery([kind]).limit(limit).filter('id', '=', number);
         console.log(q);
     }
     // var q = ds.createQuery([kind]).limit(limit).filter('current_boat', '=', number);
     else if (kind == "Ship") {
 
         //var q = ds.createQuery([kind]).limit(limit).order('name').start(token);
-        var q = ds.createQuery([kind]).limit(limit).filter('length', '=', '18');
+        var q = ds.createQuery([kind]).limit(limit).filter('cargo.id', '=', number);
     }
     if(!q)
         console.log("testing");

@@ -113,7 +113,7 @@ router.post('/', (req, res, next) => {
     const new_cargo = {"weight": req.body.weight, "delivery_date": null, "content": req.body.content}
     //const new_cargo = {"number": req.body.number, "arrival_date": null, "current_boat": null}
     if (!weight || isNaN(weight)||!content ) {
-        return res.status(400).end("request must weight (a number) and content");
+        return res.status(400).end("request must include weight (a number) and content");
     }
     else {
         new_cargo.carrier={"id": null, "name": null, "self": null};
@@ -333,15 +333,79 @@ router.put('/:cargo', (req, res, next) => {
  * Delete a cargo.
  */
 router.delete('/:cargo', (req, res, next) => {
+    
     getModel().delete(cargo, req.params.cargo, (err) => {
         if (err) {
             next(err);
             return;
         }
+        getModel().lists(req.params.cargo,ship , 50, req.query.pageToken, (err, entities, cursor) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            console.log(Object.keys(entities).length) ;
+            if(Object.keys(entities).length!=0) {
+                var testing = (JSON.stringify(entities));
+                var obj = JSON.parse(testing);
+                    const new_ship = {"name": obj[0].name, "type": obj[0].type, "length": obj[0].length, "cargo": obj[0].cargo, "self": obj[0].self};
+                    //var cargoship = {"id": obj.id, "self": obj.self};
+                    for (var i = new_ship.cargo.length-1; i >= 0; i--) {
+                        if (new_ship.cargo[i].id==req.params.cargo) {
+                            new_ship.cargo.splice(i,1);
+                        }
+                    }
+                getModel().update(ship, obj[0].id, new_ship, (err, entity) => {
+                    if (err) {
+                        next (err);
+                        return ;
+                    }
+
+                });
+                    //new_ship.cargo.push(cargoship);
         res.status(200).send('OK');
+            }
+
+        });
     });
 });
 
+router.delete('/:ship', (req, res, next) => {
+    getModel().delete(req.params.ship, (err) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        getModel().lists(cargo, req.params.ship , 50, req.query.pageToken, (err, entities, cursor) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            console.log(Object.keys(entities).length) ;
+            if(Object.keys(entities).length!=0) {
+              for (var x=0; x<Object.keys(entities).length; x++) {
+                var testing = (JSON.stringify(entities));
+                var obj = JSON.parse(testing);
+                console.log(obj[0].current_boat);
+                console.log(obj[0].id);
+               // const new_cargo = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
+               // getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
+                const new_cargo = {"carrier": {"id": null, "self":null, "name": null},"weight": obj[x].weight, "delivery_date": null, "content": obj[x].content, "self": obj[x].self}
+        //const new_cargo = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.ship}
+                getModel().updates(cargo, obj[x].id, new_cargo, (err, entity) => {
+                    if (err) {
+                        next (err);
+                        return ;
+                    }
+
+                });
+
+                }
+                }
+                res.status(200).send('OK');
+                });
+    });
+});
 /**
  * Errors on "/api/ships/*" routes.
  */
