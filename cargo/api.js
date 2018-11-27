@@ -175,6 +175,7 @@ router.get('/:cargo', (req, res, next) => {
     res.json(entity);
     });
 });
+/*
 router.put('/:cargo/ship/:ship', (req, res, next) => {
     console.log(req.params.cargo);
     console.log(req.params.ship);
@@ -225,11 +226,12 @@ router.put('/:cargo/ship/:ship', (req, res, next) => {
 });
 });
 
-/**
- * PUT /api/cargos/:id
+*/
+/*
+ * delete /api/cargos/:id
  *
  * Update a cargo.
- */
+
 router.delete('/:cargo/ship/:ship', (req, res, next) => {
     console.log(req.params.cargo);
     console.log(req.body);
@@ -272,6 +274,7 @@ router.delete('/:cargo/ship/:ship', (req, res, next) => {
 
     });
 });
+*/
 router.put('/:cargo', (req, res, next) => {
     console.log(req.params.cargo);
     console.log(req.body);
@@ -363,13 +366,13 @@ router.delete('/:cargo', (req, res, next) => {
 
                 });
                     //new_ship.cargo.push(cargoship);
-        res.status(200).send('OK');
             }
+        res.status(200).send('OK');
 
         });
     });
 });
-
+/*
 router.delete('/:ship', (req, res, next) => {
     getModel().delete(req.params.ship, (err) => {
         if (err) {

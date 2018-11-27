@@ -1,0 +1,2031 @@
+{
+	"info": {
+		"_postman_id": "ddbade63-4fdd-431b-bb97-310455bac15d",
+		"name": "cargo",
+		"description": "ships and cargo assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "df799046-d0b2-4f6e-9442-4797c05fe4c1",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var shiplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.eql(3);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shiplength\", data.length);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b6c309dc-5f1b-4246-8457-209ccf90993b",
+						"exec": [
+							"var data = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shipid\", data.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"length\":\"26\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships"
+					]
+				},
+				"description": "post call"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "df799046-d0b2-4f6e-9442-4797c05fe4c1",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var token = pm.response.json().nextPageToken;",
+							"var shiplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.be.above(0);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shiplength\", data.length);",
+							"pm.environment.set(\"token\", token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "df799046-d0b2-4f6e-9442-4797c05fe4c1",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var shiplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.eql(1);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shiplength\", data.length);",
+							"//next token saved"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{token}}",
+					"host": [
+						"{{token}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "386bdd61-c686-433a-8feb-60dbd000900b",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipid = pm.environment.get(\"shipid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID match: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(shipid)",
+							"});",
+							"pm.test(\"\\\"new boat\\\" in id: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"new boat\")",
+							"});",
+							"pm.test(\"\\\"sail\\\" in id: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"sail\")",
+							"});",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"//TESTING for shipid make sure it is included in the POST"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}"
+					]
+				},
+				"description": "ship ID get a specific ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "38fd4d12-a956-4280-a27e-1ca67f8f094f",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipid = pm.environment.get(\"shipid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"this is the new boat\")",
+							"});",
+							"",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"this is the new boat\",\n  \"type\":\"sail\",\n  \"length\":\"26\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}"
+					]
+				},
+				"description": "put new parameters"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}} Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "386bdd61-c686-433a-8feb-60dbd000900b",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipid = pm.environment.get(\"shipid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"\\\"this is the new boat\\\" in ID: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"this is the new boat\")",
+							"});",
+							"pm.test(\"Includes the number 26 in ID: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(26)",
+							"});",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}"
+					]
+				},
+				"description": "ship ID get a specific ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ddec01a-862e-44e2-8e9e-bbfa2e088718",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var sliplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.eql(3);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"sliplength\", data.length);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "get all cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09f85313-4d86-4238-a945-8dcccaca1341",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipnumber = pm.environment.get(\"slipnumber\", data.number);",
+							"slipnumber++;",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"cargoid\", data.id);",
+							"pm.environment.set(\"slipnumber\", slipnumber);",
+							"pm.environment.set(\"repeat\", data.number);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fa40a73-6850-4243-b3b2-d24307c35c2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"truck\",\n  \"weight\":\"26\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "posting cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ddec01a-862e-44e2-8e9e-bbfa2e088718",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"//var shiplength = data.length;",
+							"var sliplength=pm.environment.get(\"sliplength\", data.length);",
+							"pm.test('Total cargo = ' + data.length, function() {",
+							"    pm.expect(data.length).to.be.equal(sliplength);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var token = pm.response.json().nextPageToken;",
+							"pm.environment.set(\"cargotoken\", token)",
+							"",
+							"//number stays the same after adding fourth with pagination"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "get all cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ddec01a-862e-44e2-8e9e-bbfa2e088718",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var shiplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.eql(1);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shiplength\", data.length);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{cargotoken}}",
+					"host": [
+						"{{cargotoken}}"
+					]
+				},
+				"description": "get all cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipid = pm.environment.get(\"cargoid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID match: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(slipid)",
+							"});",
+							"pm.test(\"26 included in ID match: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"26\")",
+							"});",
+							"pm.test(\"\\\"truck\\\" included in ID match: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"truck\")",
+							"});",
+							"",
+							"",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com0/api/cargo/{{slipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "631ba901-59ba-4867-896a-81e6286850a0",
+						"exec": [
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"new truck\",\n  \"weight\":\"76\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "slip put feature"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipid = pm.environment.get(\"cargoid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID match: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(slipid)",
+							"});",
+							"pm.test(\"Response includes new truck\", function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"new truck\")",
+							"});",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipself = data.carrier.self;",
+							"var cargoself = data.self;",
+							"//var shiplength = data.length;",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"shipself\", shipself);",
+							"pm.environment.set(\"cargoself\", cargoself);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipid = pm.environment.get(\"shipid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID match: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(shipid)",
+							"});",
+							"pm.test(\"Response includes new truck\", function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"new truck\")",
+							"});",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"//test shows carrier assoicated with cargo"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{cargoself}}",
+					"host": [
+						"{{cargoself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipid = pm.environment.get(\"cargoid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID match: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(slipid)",
+							"});",
+							"",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"//test shows cargo on ship"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{shipself}}",
+					"host": [
+						"{{shipself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var shipid = pm.environment.get(\"shipid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID no longer included: \"+ shipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.not.include(shipid)",
+							"});",
+							"pm.test(\"Response includes new truck\", function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.include(\"new truck\")",
+							"});",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"//test shows ship id no longer with cargo"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{cargoself}}",
+					"host": [
+						"{{cargoself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipid = pm.environment.get(\"cargoid\");",
+							"//gists = gists.replace(/['\"]+/g, '');",
+							"//console.log (data.files['hello_world.txt'].content)",
+							"pm.test(\"ID removed: \"+ slipid, function ()",
+							"{",
+							"    //pm.expect(pm.response.text()).to.include(\"\\\"content\\\":\"+ gists)",
+							"     pm.expect(pm.response.text()).to.not.include(slipid)",
+							"});",
+							"",
+							"//5  edited contents to Hello World 2",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"//cargo no longer on ship"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{shipself}}",
+					"host": [
+						"{{shipself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"",
+							"pm.test(\"cargo not found\", function () {",
+							"    pm.response.to.have.status(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{cargoself}}",
+					"host": [
+						"{{cargoself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0ddec01a-862e-44e2-8e9e-bbfa2e088718",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"//var shiplength = data.length;",
+							"var sliplength=pm.environment.get(\"sliplength\", data.length);",
+							"pm.test('Total cargo = ' + sliplength+data.length, function() {",
+							"    pm.expect(data.length).to.be.equal(sliplength);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "get all cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "df799046-d0b2-4f6e-9442-4797c05fe4c1",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var shiplength = data.length;",
+							"//var shiplength=pm.environment.get(\"shiplength\", data.length);",
+							"pm.test('Total ships = ' +data.length, function() {",
+							"    pm.expect(data.length).to.be.equal(shiplength);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09f85313-4d86-4238-a945-8dcccaca1341",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipnumber = pm.environment.get(\"slipnumber\", data.number);",
+							"slipnumber++;",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"cargoid1\", data.id);",
+							"pm.environment.set(\"slipnumber1\", slipnumber);",
+							"pm.environment.set(\"repeat1\", data.number);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fa40a73-6850-4243-b3b2-d24307c35c2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"truck\",\n  \"weight\":\"26\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "posting cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid1}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid1}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09f85313-4d86-4238-a945-8dcccaca1341",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipnumber = pm.environment.get(\"slipnumber\", data.number);",
+							"slipnumber++;",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"cargoid3\", data.id);",
+							"pm.environment.set(\"slipnumber3\", slipnumber);",
+							"pm.environment.set(\"repeat3\", data.number);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fa40a73-6850-4243-b3b2-d24307c35c2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"truck\",\n  \"weight\":\"26\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "posting cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid3}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid3}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09f85313-4d86-4238-a945-8dcccaca1341",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipnumber = pm.environment.get(\"slipnumber\", data.number);",
+							"slipnumber++;",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"cargoid2\", data.id);",
+							"pm.environment.set(\"slipnumber2\", slipnumber);",
+							"pm.environment.set(\"repeat2\", data.number);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fa40a73-6850-4243-b3b2-d24307c35c2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"truck\",\n  \"weight\":\"26\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "posting cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09f85313-4d86-4238-a945-8dcccaca1341",
+						"exec": [
+							"var data = pm.response.json();",
+							"var slipnumber = pm.environment.get(\"slipnumber\", data.number);",
+							"slipnumber++;",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"cargoid4\", data.id);",
+							"pm.environment.set(\"slipnumber4\", slipnumber);",
+							"pm.environment.set(\"repeat4\", data.number);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5fa40a73-6850-4243-b3b2-d24307c35c2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"content\":\"truck\",\n  \"weight\":\"26\",\n  \"number\": {{slipnumber}}\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo"
+					]
+				},
+				"description": "posting cargo"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid2}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid2}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"pm.test(\"Cargo assigned.  First delete\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"//expect error message because cargo is assigned"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid2}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid2}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{slipid}} Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0c9d32ff-c57a-4691-a050-0e5df5df6745",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\":\"new boat\",\n  \"type\":\"sail\",\n  \"content\":\"car\",\n  \"weight\": {{slipnumber}},\n  \"delivery_date\": \"12/27/75\"\n}"
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo/{{cargoid4}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo",
+						"{{cargoid4}}"
+					]
+				},
+				"description": "put cargo on ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}} Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "386bdd61-c686-433a-8feb-60dbd000900b",
+						"exec": [
+							"var data = pm.response.json().items;",
+							"var sliplength = data.length;",
+							"pm.test('Total ships = ' + data.length, function() {",
+							"    pm.expect(data.length).to.eql(3);",
+							"});",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.environment.set(\"sliplength\", data.length);",
+							"//4 total but 3 on screen with paginated result"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}/cargo",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}",
+						"cargo"
+					]
+				},
+				"description": "ship ID get a specific ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid1}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid1}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid4}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid4}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid2}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid2}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/cargo/{{cargoid3}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"cargo",
+						"{{cargoid3}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a013a0bd-29b4-45f6-bef7-5525de82351e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://cargoships-220516.appspot.com/api/ships/{{shipid}}",
+					"protocol": "https",
+					"host": [
+						"cargoships-220516",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"api",
+						"ships",
+						"{{shipid}}"
+					]
+				},
+				"description": "Delete ship"
+			},
+			"response": []
+		},
+		{
+			"name": "https://cargoships-220516.appspot.com/api/cargo/{{slipid}} Copy Copy Copy Copy Copy Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b6ec2df-6a09-47c2-995b-1dfe51b7fd83",
+						"exec": [
+							"",
+							"pm.test(\"Ship is deleted\", function () {",
+							"    pm.response.to.have.status(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{shipself}}",
+					"host": [
+						"{{shipself}}"
+					]
+				},
+				"description": "get specific slip"
+			},
+			"response": []
+		}
+	]
+}

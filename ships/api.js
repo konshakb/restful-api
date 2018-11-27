@@ -16,7 +16,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ship = 'Ship';
-const slip = 'Slip';
+//const slip = 'Slip';
 const cargo = 'Cargo';
 
 function getModel () {
@@ -98,7 +98,7 @@ router.get('/', (req, res, next) => {
         });
     });
 });
-
+//get cargo from ship
 router.get('/:ship/cargo', (req, res, next) => {
     
     
@@ -118,7 +118,8 @@ router.get('/:ship/cargo', (req, res, next) => {
             cursor=encodeURIComponent(cursor);
         console.log(req.get("host"));
         console.log(req.baseUrl);
-        var root = "/cargo/"+req.params.ship+"/"
+        var root = "/" + req.params.ship+"/cargo"
+        //var root = "/cargo/"+req.params.ship+"/"
         var next = "?pageToken=";
         cursor = req.protocol + "://"+req.get("host") + req.baseUrl +root+ next + cursor;
         }
@@ -167,6 +168,65 @@ router.put('/:ship/cargo/:cargo', (req, res, next) => {
                     const new_ship = {"name": shipobj.name, "type": shipobj.type, "length": shipobj.length, "cargo": shipobj.cargo, "self": shipobj.self};
                     var cargoship = {"id": obj.id, "self": obj.self};
                     new_ship.cargo.push(cargoship);
+                getModel().updates(ship, req.params.ship, new_ship, (err, entity) => {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                });
+                });
+        //res.json(entity);
+        });
+    }
+    else
+        return res.status(403).end("Cargo already on ship");
+});
+});
+//remove cargo from ship
+router.delete('/:ship/cargo/:cargo', (req, res, next) => {
+    console.log(req.params.cargo);
+    console.log(req.params.ship);
+    let delivery_date = req.body.delivery_date
+   // console.log(date);
+   // console.log(isValidDate(date));
+    getModel().reads(cargo, req.params.cargo, (err, entity) => {
+    if (err) {
+        next(err);
+        return;
+    }
+    console.log(req.params.cargo);
+    // console.log(obj);
+    var testing = (JSON.stringify(entity));
+    var obj = JSON.parse(testing);
+    // console.log(data.date)
+    console.log(obj.weight);
+    console.log(obj.content);
+    //console.log(obj.number);//number of the ship
+    if(obj.delivery_date){
+    getModel().reads(ship, req.params.ship, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+    //    res.json(entity);
+        var shipping = (JSON.stringify(entity));
+    var shipobj = JSON.parse(shipping);
+        const new_cargo = {"carrier": {"id": null, "self":null, "name": null},"weight": obj.weight, "delivery_date": null, "content": obj.content, "self": obj.self}
+        //const new_cargo = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.ship}
+                getModel().updates(cargo, req.params.cargo, new_cargo, (err, entity) => {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                    res.json(entity);
+                    const new_ship = {"name": shipobj.name, "type": shipobj.type, "length": shipobj.length, "cargo": shipobj.cargo, "self": shipobj.self};
+                    //var cargoship = {"id": obj.id, "self": obj.self};
+                    for (var i = new_ship.cargo.length-1; i >= 0; i--) {
+                        if (new_ship.cargo[i].id==req.params.cargo) {
+                            new_ship.cargo.splice(i,1);
+                        }
+                    }
+                    //new_ship.cargo.push(cargoship);
                 getModel().updates(ship, req.params.ship, new_ship, (err, entity) => {
                     if (err) {
                         next(err);
@@ -235,7 +295,15 @@ router.put('/:ship', (req, res, next) => {
     let name = req.body.name;
     let type = req.body.type;
     let length = req.body.length;
-    const new_ship = {"name": req.body.name, "type": req.body.type, "length": req.body.length};
+    getModel().reads(ship, req.params.ship, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+    var shipping = (JSON.stringify(entity));
+    var shipobj = JSON.parse(shipping);
+    
+    const new_ship = {"cargo": shipobj.cargo,"name": req.body.name, "type": req.body.type, "length": req.body.length};
     console.log(new_ship);
       console.log(req.body.name);
       console.log(req.body.length);
@@ -250,6 +318,7 @@ router.put('/:ship', (req, res, next) => {
             return;
         }
         res.json(entity);
+    });
     });
 });
 
