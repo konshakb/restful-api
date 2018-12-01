@@ -28,16 +28,18 @@ app.set('trust proxy', true);
 //app.use('/books', require('./books/crud'));
 //app.use('/api/books', require('./books/api'));
 
-app.use('/ships', require('./ships/crud'));
-app.use('/api/ships', require('./ships/api'));
-app.use('/cargo', require('./cargo/crud'));
-app.use('/api/cargo', require('./cargo/api'));
+app.use('/lists', require('./lists/crud'));
+app.use('/api/lists', require('./lists/api'));
+app.use('/items', require('./items/crud'));
+app.use('/api/items', require('./items/api'));
+app.use('/users', require('./users/crud'));
+app.use('/api/users', require('./users/api'));
 //app.use('/api/cargos', require('./cargos/api'));
 // Redirect root to /books
 //app.get('/', (req, res) => {
 //  res.redirect('/books');
 app.get('/', (req, res) => {
-  res.redirect('/ships');
+  res.redirect('/lists');
 });
 
 // Basic 404 handler

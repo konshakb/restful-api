@@ -70,35 +70,38 @@ router.use(bodyParser.json());
 router.get('/', (req, res, next) => {
     //  const list =getModel().listQuery(kind);
     //  removed the => and replaced with async and it worked.
-    getModel().list(item,3, req.query.pageToken, (err, entities, cursor) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        lists=entities;
-        console.log(entities);
-        JSON.stringify(entities);
-        if(cursor) {
-            cursor=encodeURIComponent(cursor);
-            console.log(req.get("host"));
-            console.log(req.baseUrl);
-            console.log("yeah you already know!!");
-            var next = "?pageToken=";
-            cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
-        }
+    var contype = req.headers['content-type'];
+    if (contype==='application/json') {
+        getModel().list(item,3, req.query.pageToken, (err, entities, cursor) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            lists=entities;
+            console.log(entities);
+            JSON.stringify(entities);
+            if(cursor) {
+                cursor=encodeURIComponent(cursor);
+                console.log(req.get("host"));
+                console.log(req.baseUrl);
+                console.log("yeah you already know!!");
+                var next = "?pageToken=";
+                cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+            }
 
-        res.json({
-            items: entities,
-            nextPageToken: cursor
+            res.json({
+                items: entities,
+                nextPageToken: cursor
+            });
+            /*
+               getModel().list(item,10, req.query.pageToken, (err, entities, cursor) => {
+               console.log(entities);
+               getModel().list(item,10, req.query.pageToken, (err, entities, cursor) => {
+               console.log(entities);
+               });
+               });*/
         });
-        /*
-           getModel().list(item,10, req.query.pageToken, (err, entities, cursor) => {
-           console.log(entities);
-           getModel().list(item,10, req.query.pageToken, (err, entities, cursor) => {
-           console.log(entities);
-           });
-           });*/
-    });
+    } else { res.status(406).send('content-type must be application/json'); }
 });
 
 /**
@@ -107,25 +110,28 @@ router.get('/', (req, res, next) => {
  * Create a new item.
  */
 router.post('/', (req, res, next) => {
-    let weight=req.body.weight;
-    let content=req.body.content;
-    //let arrival_date=req.body.arrival;
-    const new_item = {"weight": req.body.weight, "delivery_date": null, "content": req.body.content}
-    //const new_item = {"number": req.body.number, "arrival_date": null, "current_boat": null}
-    if (!weight || isNaN(weight)||!content ) {
-        return res.status(400).end("request must include weight (a number) and content");
-    }
-    else {
-        new_item.carrier={"id": null, "name": null, "self": null};
+    var contype = req.headers['content-type'];
+    if (contype==='application/json') {
+        let weight=req.body.weight;
+        let content=req.body.content;
+        //let arrival_date=req.body.arrival;
+        const new_item = {"weight": req.body.weight, "delivery_date": null, "content": req.body.content}
+        //const new_item = {"number": req.body.number, "arrival_date": null, "current_boat": null}
+        if (!weight || isNaN(weight)||!content ) {
+            return res.status(400).end("request must include weight (a number) and content");
+        }
+        else {
+            new_item.carrier={"id": null, "name": null, "self": null};
 
-        getModel().create(item, new_item, (err, entity) => {
-            if (err) {
-                next(err);
-                return;
-            }
-            res.json(entity);
-        });
-    }
+            getModel().create(item, new_item, (err, entity) => {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                res.json(entity);
+            });
+        }
+    } else { res.status(406).send('content-type must be application/json'); }
 });
 /*router.post('/', (req, res, next) => {
   let number=req.body.number;
@@ -156,73 +162,76 @@ res.json(entity);
  */
 router.get('/:item', (req, res, next) => {
 
-    getModel().read(item, req.params.item, (err, entity) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        // var obj = JSON.parse(entity);
-        // console.log(obj);
-        var testing = (JSON.stringify(entity));
-        var obj = JSON.parse(testing);
-        // console.log(data.date)
-        console.log(obj.number);//number of the list
-        if(obj.arrival_date===null&&obj.current_boat==null)
-        console.log("looks like we can proceed");
-    var url = "https://my-project-bookstore.appspot.com/api/lists/"+obj.current_boat;
-    if(obj.current_boat)
-        entity.url = {"url":url};
-    res.json(entity);
-    });
-});
-/*
-router.put('/:item/list/:list', (req, res, next) => {
-    console.log(req.params.item);
-    console.log(req.params.list);
-    let date = req.body.arrival_date
-    console.log(date);
-    console.log(isValidDate(date));
-    if(isValidDate(date))
-    console.log('Valid date');
-    else return res.status(403).end("Invalid date:  DD/MM/YYYY");
-    getModel().read(item, req.params.item, (err, entity) => {
-    if (err) {
-        next(err);
-        return;
-    }
-    // var obj = JSON.parse(entity);
-    // console.log(obj);
-    var testing = (JSON.stringify(entity));
-    var obj = JSON.parse(testing);
-    // console.log(data.date)
-    console.log(obj.number);
-    console.log(obj.name);
-    //console.log(obj.number);//number of the list
-    if(obj.arrival_date===null&&obj.current_boat==null){
-        const new_item = {"number": obj.number, "arrival_date": date, "current_boat": req.params.list}
-        getModel().lists(req.params.list, item,10, req.query.pageToken, (err, entities, cursor) => {
+    var contype = req.headers['content-type'];
+    if (contype==='application/json') {
+        getModel().read(item, req.params.item, (err, entity) => {
             if (err) {
                 next(err);
                 return;
             }
-            console.log(Object.keys(entities));
-            if(Object.keys(entities).length===0){
-                console.log("looks like we can proceed");
-                getModel().update(item, req.params.item, new_item, (err, entity) => {
-                    if (err) {
-                        next(err);
-                        return;
-                    }
-                    res.json(entity);
-                });
-            }
-            else
-            return res.status(400).end("Ship is already in item");
-        //res.json(entity);
+            // var obj = JSON.parse(entity);
+            // console.log(obj);
+            var testing = (JSON.stringify(entity));
+            var obj = JSON.parse(testing);
+            // console.log(data.date)
+            console.log(obj.number);//number of the list
+            if(obj.arrival_date===null&&obj.current_boat==null)
+            console.log("looks like we can proceed");
+        var url = "https://my-project-bookstore.appspot.com/api/lists/"+obj.current_boat;
+        if(obj.current_boat)
+            entity.url = {"url":url};
+        res.json(entity);
         });
-    }
-    else
-        return res.status(403).end("Slip currently occupied");
+    } else { res.status(406).send('content-type must be application/json'); }
+});
+/*
+   router.put('/:item/list/:list', (req, res, next) => {
+   console.log(req.params.item);
+   console.log(req.params.list);
+   let date = req.body.arrival_date
+   console.log(date);
+   console.log(isValidDate(date));
+   if(isValidDate(date))
+   console.log('Valid date');
+   else return res.status(403).end("Invalid date:  DD/MM/YYYY");
+   getModel().read(item, req.params.item, (err, entity) => {
+   if (err) {
+   next(err);
+   return;
+   }
+// var obj = JSON.parse(entity);
+// console.log(obj);
+var testing = (JSON.stringify(entity));
+var obj = JSON.parse(testing);
+// console.log(data.date)
+console.log(obj.number);
+console.log(obj.name);
+//console.log(obj.number);//number of the list
+if(obj.arrival_date===null&&obj.current_boat==null){
+const new_item = {"number": obj.number, "arrival_date": date, "current_boat": req.params.list}
+getModel().lists(req.params.list, item,10, req.query.pageToken, (err, entities, cursor) => {
+if (err) {
+next(err);
+return;
+}
+console.log(Object.keys(entities));
+if(Object.keys(entities).length===0){
+console.log("looks like we can proceed");
+getModel().update(item, req.params.item, new_item, (err, entity) => {
+if (err) {
+next(err);
+return;
+}
+res.json(entity);
+});
+}
+else
+return res.status(400).end("Ship is already in item");
+//res.json(entity);
+});
+}
+else
+return res.status(403).end("Slip currently occupied");
 });
 });
 
@@ -232,55 +241,57 @@ router.put('/:item/list/:list', (req, res, next) => {
  *
  * Update a item.
 
-router.delete('/:item/list/:list', (req, res, next) => {
-    console.log(req.params.item);
-    console.log(req.body);
-    let number=req.body.number;
+ router.delete('/:item/list/:list', (req, res, next) => {
+ console.log(req.params.item);
+ console.log(req.body);
+ let number=req.body.number;
 
-    getModel().read(item, req.params.item, (err, entity) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        //    res.json(entity);
-        var testing = (JSON.stringify(entity));
-        var obj = JSON.parse(testing);
-        console.log(obj.number);
-        number=obj.number;
-        const new_item = {"number": obj.number, "arrival_date": null, "current_boat": null}
-        if (!number || isNaN(number) ) {
-            return res.status(400).end("request must include number");
-        }
-        else {
-            getModel().lists(number, item,10, req.query.pageToken, (err, entities, cursor) => {
-                if (err) {
-                    next(err);
-                    return;
-                }
-                console.log(Object.keys(entities));
-                if(Object.keys(entities).length>0){
-                    getModel().update(item, req.params.item, new_item, (err, entity) => {
-                        if (err) {
-                            next(err);
-                            return;
-                        }
-                        res.json(entity);
-                    });
-                }
-                else
-                return res.status(400).end("Slip number already created");
-            });
-        }
+ getModel().read(item, req.params.item, (err, entity) => {
+ if (err) {
+ next(err);
+ return;
+ }
+//    res.json(entity);
+var testing = (JSON.stringify(entity));
+var obj = JSON.parse(testing);
+console.log(obj.number);
+number=obj.number;
+const new_item = {"number": obj.number, "arrival_date": null, "current_boat": null}
+if (!number || isNaN(number) ) {
+return res.status(400).end("request must include number");
+}
+else {
+getModel().lists(number, item,10, req.query.pageToken, (err, entities, cursor) => {
+if (err) {
+next(err);
+return;
+}
+console.log(Object.keys(entities));
+if(Object.keys(entities).length>0){
+getModel().update(item, req.params.item, new_item, (err, entity) => {
+if (err) {
+next(err);
+return;
+}
+res.json(entity);
+});
+}
+else
+return res.status(400).end("Slip number already created");
+});
+}
 
-    });
+});
 });
 */
 router.put('/:item', (req, res, next) => {
-    console.log(req.params.item);
-    console.log(req.body);
-    //let number=req.body.number;
-    let weight = req.body.weight;
-    let content = req.body.content
+    var contype = req.headers['content-type'];
+    if (contype==='application/json') {
+        console.log(req.params.item);
+        console.log(req.body);
+        //let number=req.body.number;
+        let weight = req.body.weight;
+        let content = req.body.content
 
     getModel().read(item, req.params.item, (err, entity) => {
         if (err) {
@@ -296,28 +307,26 @@ router.put('/:item', (req, res, next) => {
             return res.status(400).end("request must include updated weight and updated content");
         }
         else {
-           // getModel().lists(number, item,10, req.query.pageToken, (err, entities, cursor) => {
-             //   if (err) {
-               //     next(err);
-                 //   return;
-              //  }
-              //  console.log(Object.keys(entities));
-              //  if(Object.keys(entities).length===0){
-                    getModel().update(item, req.params.item, new_item, (err, entity) => {
-                        if (err) {
-                            next(err);
-                            return;
-                        }
-                        res.json(entity);
-                    });
+            // getModel().lists(number, item,10, req.query.pageToken, (err, entities, cursor) => {
+            //   if (err) {
+            //     next(err);
+            //   return;
+            //  }
+            //  console.log(Object.keys(entities));
+            //  if(Object.keys(entities).length===0){
+            getModel().update(item, req.params.item, new_item, (err, entity) => {
+                if (err) {
+                    next(err);
+                    return;
                 }
-                //else
-                //return res.status(400).end("Slip number already created");
+                res.json(entity);
             });
-       // }
-
-   // });
-});
+        }
+        //else
+        //return res.status(400).end("Slip number already created");
+        });
+        } else { res.status(406).send('content-type must be application/json'); }
+    });
 /*
    router.put('/:item', (req, res, next) => {
    console.log(req.params.item);
@@ -336,21 +345,23 @@ router.put('/:item', (req, res, next) => {
  * Delete a item.
  */
 router.delete('/:item', (req, res, next) => {
-    
-    getModel().delete(item, req.params.item, (err) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        getModel().lists(req.params.item,list , 50, req.query.pageToken, (err, entities, cursor) => {
+
+    var contype = req.headers['content-type'];
+    if (contype==='application/json') {
+        getModel().delete(item, req.params.item, (err) => {
             if (err) {
                 next(err);
                 return;
             }
-            console.log(Object.keys(entities).length) ;
-            if(Object.keys(entities).length!=0) {
-                var testing = (JSON.stringify(entities));
-                var obj = JSON.parse(testing);
+            getModel().lists(req.params.item,list , 50, req.query.pageToken, (err, entities, cursor) => {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                console.log(Object.keys(entities).length) ;
+                if(Object.keys(entities).length!=0) {
+                    var testing = (JSON.stringify(entities));
+                    var obj = JSON.parse(testing);
                     const new_list = {"name": obj[0].name, "type": obj[0].type, "length": obj[0].length, "item": obj[0].item, "self": obj[0].self};
                     //var itemlist = {"id": obj.id, "self": obj.self};
                     for (var i = new_list.item.length-1; i >= 0; i--) {
@@ -358,56 +369,57 @@ router.delete('/:item', (req, res, next) => {
                             new_list.item.splice(i,1);
                         }
                     }
-                getModel().update(list, obj[0].id, new_list, (err, entity) => {
-                    if (err) {
-                        next (err);
-                        return ;
-                    }
+                    getModel().update(list, obj[0].id, new_list, (err, entity) => {
+                        if (err) {
+                            next (err);
+                            return ;
+                        }
 
-                });
+                    });
                     //new_list.item.push(itemlist);
-            }
-        res.status(200).send('OK');
-
-        });
-    });
-});
-/*
-router.delete('/:list', (req, res, next) => {
-    getModel().delete(req.params.list, (err) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        getModel().lists(item, req.params.list , 50, req.query.pageToken, (err, entities, cursor) => {
-            if (err) {
-                next(err);
-                return;
-            }
-            console.log(Object.keys(entities).length) ;
-            if(Object.keys(entities).length!=0) {
-              for (var x=0; x<Object.keys(entities).length; x++) {
-                var testing = (JSON.stringify(entities));
-                var obj = JSON.parse(testing);
-                console.log(obj[0].current_boat);
-                console.log(obj[0].id);
-               // const new_item = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
-               // getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
-                const new_item = {"carrier": {"id": null, "self":null, "name": null},"weight": obj[x].weight, "delivery_date": null, "content": obj[x].content, "self": obj[x].self}
-        //const new_item = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.list}
-                getModel().updates(item, obj[x].id, new_item, (err, entity) => {
-                    if (err) {
-                        next (err);
-                        return ;
-                    }
-
-                });
-
-                }
                 }
                 res.status(200).send('OK');
-                });
-    });
+
+            });
+        });
+    } else { res.status(406).send('content-type must be application/json'); }
+});
+/*
+   router.delete('/:list', (req, res, next) => {
+   getModel().delete(req.params.list, (err) => {
+   if (err) {
+   next(err);
+   return;
+   }
+   getModel().lists(item, req.params.list , 50, req.query.pageToken, (err, entities, cursor) => {
+   if (err) {
+   next(err);
+   return;
+   }
+   console.log(Object.keys(entities).length) ;
+   if(Object.keys(entities).length!=0) {
+   for (var x=0; x<Object.keys(entities).length; x++) {
+   var testing = (JSON.stringify(entities));
+   var obj = JSON.parse(testing);
+   console.log(obj[0].current_boat);
+   console.log(obj[0].id);
+// const new_item = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
+// getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
+const new_item = {"carrier": {"id": null, "self":null, "name": null},"weight": obj[x].weight, "delivery_date": null, "content": obj[x].content, "self": obj[x].self}
+//const new_item = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.list}
+getModel().updates(item, obj[x].id, new_item, (err, entity) => {
+if (err) {
+next (err);
+return ;
+}
+
+});
+
+}
+}
+res.status(200).send('OK');
+});
+});
 });
 /**
  * Errors on "/api/lists/*" routes.
@@ -415,11 +427,17 @@ router.delete('/:list', (req, res, next) => {
 router.use((err, req, res, next) => {
     // Format error and forward to generic error handler for logging and
     // responding to the request
+    if (err.code===404) {
+        res.status(404).json({message: "Not Found"});
+    }
+    else{
+
     err.response = {
         message: err.message,
     internalCode: err.code
     };
     next(err);
+    }
 });
 
 module.exports = router;
