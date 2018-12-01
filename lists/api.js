@@ -286,15 +286,18 @@ router.delete('/:list/items/:item', (req, res, next) => {
  *
  * Create a new list.
  */
-router.post('/', (req, res, next) => {
+router.post('/', jwtCheck, (req, res, next) => {
         var contype = req.headers['content-type'];
        if (contype==='application/json') {
+    console.log(req.user.sub);
+    var owner = req.user.sub.slice(6)
+    console.log(owner);
     let name = req.body.name;
     let type = req.body.type;
     let length = req.body.length;
-    const new_list = {"name": req.body.name, "type": req.body.type, "length": req.body.length};
+    const new_list = {"owner": owner, "name": req.body.name, "type": req.body.type, "length": req.body.length};
     new_list.item= [];
-//    for(var x=0;x<5;x++) {
+//    for(var x=0;x<5;x++) i{
 //        new_list.item.push(x);
   //  }
     console.log(new_list);
@@ -314,6 +317,37 @@ router.post('/', (req, res, next) => {
     });
         } else { res.status(406).send('Header must be application/json'); }
 });
+/*
+router.post('/', jwtCheck, (req, res, next) => {
+
+    console.log(req.user.sub);
+    var owner = req.user.sub.slice(6)
+    console.log(owner);
+let name = req.body.name;
+let type = req.body.type;
+let length = req.body.length;
+const new_ship = {"owner": owner, "name": req.body.name, "type": req.body.type, "length": req.body.length};
+// new_ship.cargo= [];
+//    for(var x=0;x<5;x++) {
+//        new_ship.cargo.push(x);
+//  }
+console.log(new_ship);
+//  console.log(req.body.length);
+if (!name || !type || !length) {
+    return res.status(400).end('request must include name type and length');
+}
+
+
+getModel().create(new_ship, (err, entity) => {
+    if (err) {
+        next(err);
+        return;
+    }
+    entity.location = {"status":"out to sea"};
+    res.json(entity);
+});
+});
+*/
 /**
  * GET /api/lists/:id
  *
