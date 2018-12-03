@@ -62,6 +62,14 @@ function isValidDate(dateString)
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
 
+router.delete('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
+router.put('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
 /**
  * GET /api/items
  *

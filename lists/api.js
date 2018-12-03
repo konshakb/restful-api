@@ -293,7 +293,7 @@ router.delete('/:list/items/:item', (req, res, next) => {
         console.log(obj.weight);
         console.log(obj.content);
         //console.log(obj.number);//number of the list
-        if(!obj.delivery_date){
+        if(obj){
             getModel().reads(list, req.params.list, (err, entity) => {
                 if (err) {
                     next(err);
@@ -302,14 +302,9 @@ router.delete('/:list/items/:item', (req, res, next) => {
                 //    res.json(entity);
                 var listping = (JSON.stringify(entity));
                 var listobj = JSON.parse(listping);
-                const new_item = {"carrier": {"id": null, "self":null, "name": null},"weight": obj.weight, "delivery_date": null, "content": obj.content, "self": obj.self}
+               // const new_item = {"carrier": {"id": null, "self":null, "name": null},"weight": obj.weight, "delivery_date": null, "content": obj.content, "self": obj.self}
                 //const new_item = {"weight": obj.weight, "delivery_date": obj.delivery_date, "current_boat": req.params.list}
-                getModel().updates(item, req.params.item, new_item, (err, entity) => {
-                    if (err) {
-                        next(err);
-                        return;
-                    }
-                    res.json(entity);
+                   // res.json(entity);
                     const new_list = {"owner": listobj.owner,"name": listobj.name, "type": listobj.type, "store": listobj.store, "item": listobj.item, "self": listobj.self};
                     //var itemlist = {"id": obj.id, "self": obj.self};
                     for (var i = new_list.item.length-1; i >= 0; i--) {
@@ -323,13 +318,12 @@ router.delete('/:list/items/:item', (req, res, next) => {
                             next(err);
                             return;
                         }
+                    res.json(entity);
                     });
-                });
-                //res.json(entity);
             });
         }
         else
-            return res.status(403).end("Item already on list");
+            return res.status(404).end("Item not found");
     });
     } else { res.status(406).send('Header must be application/json'); }
 });
@@ -541,6 +535,14 @@ res.status(200).send('OK');
 /**
  * Errors on "/api/lists/*" routes.
  */
+router.delete('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
+router.put('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
 router.use((err, req, res, next) => {
     // Format error and forward to generic error handler for logging and
     // responding to the request

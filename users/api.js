@@ -92,9 +92,17 @@ function sorting(o) {
 
 
 
-
-
 const router = express.Router();
+
+router.delete('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
+router.put('/', (req, res, next) => {
+    res.set("Accept", "GET, POST");
+    res.status(405).end();
+});
+
 
 /**
  * GET /api/users
