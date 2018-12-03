@@ -153,6 +153,37 @@ router.get('/:userid',  jwtCheck, (req, res, next) => {
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
 
+router.delete('/:userid', (req, res, next) => {
+    getModel().delete(req.params.userid, (err) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        res.status(204).end();
+     /*   getModel().listing(req.params.ship, slip, 10, req.query.pageToken, (err, entities, cursor) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            console.log(Object.keys(entities).length) ;
+            if(Object.keys(entities).length!=0) {
+                var testing = (JSON.stringify(entities));
+                var obj = JSON.parse(testing);
+                console.log(obj[0].current_boat);
+                console.log(obj[0].id);
+                const new_slip = {"number": obj[0].number, "arrival_date": null, "current_boat": null};
+                getModel().updates(slip, obj[0].id, new_slip, (err, entity) => {
+                    if (err) {
+                        next (err);
+                        return ;
+                    }
+
+                });
+
+            }
+        });*/
+    });
+});
 /**
  * GET /api/ships
  *
@@ -265,7 +296,10 @@ router.post('/', function(req, res){
             request(option, (error, response, body) => {
                 if (error){
                     res.status(500).send(error);
-                } else {
+                } else if (response.body.statusCode===409) {
+                    res.status(409).send("user already exists");
+                }
+                else{
 //                    res.send(body);
                     console.log(response);
                     var access_token = response.body.access_token;
@@ -277,7 +311,8 @@ router.post('/', function(req, res){
             next(err);
             return;
         }
-        res.json(entity);
+        //res.json(entity);
+        res.status(201).json(entity);
        // entity.location = {"status":"out to sea"};
        // res.json(entity);
     });

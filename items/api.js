@@ -129,7 +129,8 @@ router.post('/', (req, res, next) => {
                     next(err);
                     return;
                 }
-                res.json(entity);
+                //res.json(entity);
+                res.status(201).json(entity);
             });
         }
     } else { res.status(406).send('content-type must be application/json'); }
@@ -364,7 +365,7 @@ router.delete('/:item', (req, res, next) => {
                 if(Object.keys(entities).length!=0) {
                     var testing = (JSON.stringify(entities));
                     var obj = JSON.parse(testing);
-                    const new_list = {"owner": obj[0].owner, "type": obj[0].type, "name": obj[0].name, "item": obj[0].item, "self": obj[0].self};
+                    const new_list = {"store": obj[0].store, "owner": obj[0].owner, "type": obj[0].type, "name": obj[0].name, "item": obj[0].item, "self": obj[0].self};
                     //var itemlist = {"id": obj.id, "self": obj.self};
                     for (var i = new_list.item.length-1; i >= 0; i--) {
                         if (new_list.item[i].id==req.params.item) {
@@ -380,7 +381,8 @@ router.delete('/:item', (req, res, next) => {
                     });
                     //new_list.item.push(itemlist);
                 }
-                res.status(200).send('OK');
+                //res.status(200).send('OK');
+                res.status(204).end();
 
             });
         });
