@@ -16,6 +16,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const ship = 'Ship';
+const user = 'User';
 const request = require('request');
 //const slip = 'Slip';
 const cargo = 'Cargo';
@@ -95,6 +96,60 @@ function sorting(o) {
 
 const router = express.Router();
 
+/**
+ * GET /api/users
+ *
+ * Retrieve a page of lists (up to ten at a time).
+ */
+router.get('/', (req, res, next) => {
+    getModel().list(5, req.query.pageToken, (err, entities, cursor) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        const accepts = req.accepts(['application/json']);
+//        console.log(req.headers.content-type);
+        var contype = req.headers['content-type'];
+        console.log(contype);
+        var content = "content-type";
+        if (!accepts) {
+            res.status(406).send('Not Acceptable');
+        } else if(accepts === 'application/json' && contype==='application/json') {
+        JSON.stringify(entities);
+        if(cursor) {
+            cursor=encodeURIComponent(cursor);
+        console.log(req.get("host"));
+        console.log(req.baseUrl);
+        console.log("yeah you already know!!");
+        var next = "?pageToken=";
+        cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
+        }
+            res.status(200).json({
+                items: entities,
+                nextPageToken: cursor
+            });
+        } else if(accepts != 'application/json') {
+            res.status(406).send("Header must be application/json");
+        } else { res.status(406).send('Header must be application/json'); }
+        /*
+        res.json({
+            items: entities,
+            nextPageToken: cursor
+        });*/
+    });
+});
+router.get('/:userid',  jwtCheck, (req, res, next) => {
+        var contype = req.headers['content-type'];
+       if (contype==='application/json') {
+    getModel().read(req.params.userid, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        res.json(entity);
+    });
+        } else { res.status(406).send('Header must be application/json'); }
+});
 // Automatically parse request body as JSON
 router.use(bodyParser.json());
 
@@ -160,8 +215,8 @@ router.post('/login', function(req, res){
         if (error){
             res.status(500).send(error);
         } else {
-            var decoded = parseJwt (body.id_token) ;
-            console.log(decoded);
+      //      var decoded = parseJwt (body.id_token) ;
+        //    console.log(decoded);
             res.send(body);
         }
     });
@@ -211,14 +266,57 @@ router.post('/', function(req, res){
                 if (error){
                     res.status(500).send(error);
                 } else {
-                    res.send(body);
+//                    res.send(body);
                     console.log(response);
                     var access_token = response.body.access_token;
+                    var owner = body.user_id.slice(6)
+                    const new_user={"owner": owner, "email": body.email, "username": body.username, "list": null};
+//                    res.send(new_user);
+    getModel().create(new_user, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        res.json(entity);
+       // entity.location = {"status":"out to sea"};
+       // res.json(entity);
+    });
                 }
             });
         }
     });
+/*
+router.post('/', jwtCheck, (req, res, next) => {
+        var contype = req.headers['content-type'];
+       if (contype==='application/json') {
+    console.log(req.user.sub);
+    var owner = req.user.sub.slice(6)
+    console.log(owner);
+    let name = req.body.name;
+    let type = req.body.type;
+    let length = req.body.length;
+    const new_list = {"owner": owner, "name": req.body.name, "type": req.body.type, "length": req.body.length};
+    new_list.item= [];
+//    for(var x=0;x<5;x++) i{
+//        new_list.item.push(x);
+  //  }
+    console.log(new_list);
+    //  console.log(req.body.length);
+    if (!name || !type || !length) {
+        return res.status(400).end('request must include name type and length');
+    }
 
+
+    getModel().create(new_list, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        entity.location = {"status":"out to sea"};
+        res.json(entity);
+    });
+        } else { res.status(406).send('Header must be application/json'); }
+});*/
 });
 
 

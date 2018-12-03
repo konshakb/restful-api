@@ -154,7 +154,7 @@ function update (id, data, cb) {
         //        data.id = entity.key.id;
         //cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
         
-                data.self = "https://cargoships-220516.appspot.com/api/ships/"+entity.key.id;
+                data.self = "https://wishlistfinal.appspot.com/api/lists/"+entity.key.id;
                     //cargoships-220516.appspot.com/api/shipsor (var i = new_ship.cargo.length-1; i >= 0; i--) {
                 key = ds.key([kind, parseInt(entity.key.id, 10)]);
                 entity = {

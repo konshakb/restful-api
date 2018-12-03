@@ -213,7 +213,7 @@ function update (kind, id, data, cb) {
 //                data.id = entity.key.id;
                 console.log(data.id);
                 //data.self = "http://localhost:8080/api/item/"+entity.key.id;
-                data.self = "https://itemships-220516.appspot.com/api/item/"+entity.key.id;
+                data.self = "https://wishlistfinal.appspot.com/api/items/"+entity.key.id;
                 console.log(key);
                 key = ds.key([kind, parseInt(entity.key.id, 10)]);
                 entity = {

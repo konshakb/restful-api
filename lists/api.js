@@ -91,7 +91,7 @@ router.use(bodyParser.json());
  * Retrieve a page of lists (up to ten at a time).
  */
 router.get('/', (req, res, next) => {
-    getModel().list(3, req.query.pageToken, (err, entities, cursor) => {
+    getModel().list(5, req.query.pageToken, (err, entities, cursor) => {
         if (err) {
             next(err);
             return;
@@ -200,7 +200,7 @@ router.put('/:list/items/:item', (req, res, next) => {
                         return;
                     }
                     res.json(entity);
-                    const new_list = {"name": listobj.name, "type": listobj.type, "length": listobj.length, "item": listobj.item, "self": listobj.self};
+                    const new_list = {"owner": listobj.owner, "name": listobj.name, "type": listobj.type, "store": listobj.store, "item": listobj.item, "self": listobj.self};
                     var itemlist = {"id": obj.id, "self": obj.self};
                     new_list.item.push(itemlist);
                 getModel().updates(list, req.params.list, new_list, (err, entity) => {
@@ -258,7 +258,7 @@ router.delete('/:list/items/:item', (req, res, next) => {
                         return;
                     }
                     res.json(entity);
-                    const new_list = {"name": listobj.name, "type": listobj.type, "length": listobj.length, "item": listobj.item, "self": listobj.self};
+                    const new_list = {"owner": listobj.owner,"name": listobj.name, "type": listobj.type, "store": listobj.store, "item": listobj.item, "self": listobj.self};
                     //var itemlist = {"id": obj.id, "self": obj.self};
                     for (var i = new_list.item.length-1; i >= 0; i--) {
                         if (new_list.item[i].id==req.params.item) {
@@ -294,16 +294,16 @@ router.post('/', jwtCheck, (req, res, next) => {
     console.log(owner);
     let name = req.body.name;
     let type = req.body.type;
-    let length = req.body.length;
-    const new_list = {"owner": owner, "name": req.body.name, "type": req.body.type, "length": req.body.length};
+    let store = req.body.store;
+    const new_list = {"owner": owner, "name": req.body.name, "type": req.body.type, "store": req.body.store};
     new_list.item= [];
 //    for(var x=0;x<5;x++) i{
 //        new_list.item.push(x);
   //  }
     console.log(new_list);
-    //  console.log(req.body.length);
-    if (!name || !type || !length) {
-        return res.status(400).end('request must include name type and length');
+    //  console.log(req.body.store);
+    if (!name || !type || !store) {
+        return res.status(400).end('request must include name type and store');
     }
 
 
@@ -312,7 +312,7 @@ router.post('/', jwtCheck, (req, res, next) => {
             next(err);
             return;
         }
-        entity.location = {"status":"out to sea"};
+        //entity.location = {"status":"out to sea"};
         res.json(entity);
     });
         } else { res.status(406).send('Header must be application/json'); }
@@ -325,16 +325,16 @@ router.post('/', jwtCheck, (req, res, next) => {
     console.log(owner);
 let name = req.body.name;
 let type = req.body.type;
-let length = req.body.length;
-const new_ship = {"owner": owner, "name": req.body.name, "type": req.body.type, "length": req.body.length};
+let store = req.body.store;
+const new_ship = {"owner": owner, "name": req.body.name, "type": req.body.type, "store": req.body.store};
 // new_ship.cargo= [];
 //    for(var x=0;x<5;x++) {
 //        new_ship.cargo.push(x);
 //  }
 console.log(new_ship);
-//  console.log(req.body.length);
-if (!name || !type || !length) {
-    return res.status(400).end('request must include name type and length');
+//  console.log(req.body.store);
+if (!name || !type || !store) {
+    return res.status(400).end('request must include name type and store');
 }
 
 
@@ -376,22 +376,22 @@ router.put('/:list', (req, res, next) => {
        if (contype==='application/json') {
     let name = req.body.name;
     let type = req.body.type;
-    let length = req.body.length;
+    let store = req.body.store;
     getModel().reads(list, req.params.list, (err, entity) => {
         if (err) {
             next(err);
             return;
         }
-    var listping = (JSON.stringify(entity));
-    var listobj = JSON.parse(listping);
+    var listing = (JSON.stringify(entity));
+    var listobj = JSON.parse(listing);
     
-    const new_list = {"item": listobj.item,"name": req.body.name, "type": req.body.type, "length": req.body.length};
+    const new_list = {"owner": listobj.owner, "item": listobj.item,"name": req.body.name, "type": req.body.type, "store": req.body.store};
     console.log(new_list);
       console.log(req.body.name);
-      console.log(req.body.length);
+      console.log(req.body.store);
       console.log(req.body.type);
-    if (!name || !type || !length) {
-        return res.status(400).end('put request must include name type and length');
+    if (!name || !type || !store) {
+        return res.status(400).end('put request must include name type and store');
     }
 
     getModel().update(req.params.list, new_list, (err, entity) => {
@@ -459,6 +459,9 @@ router.use((err, req, res, next) => {
     console.log(err.code);
     if (err.code===404) {
         res.status(404).json({message: "Not Found"});
+    }
+    else if (err.name === 'UnauthorizedError') {
+        res.status(401).json({ message: 'Unauthorized. Invalid token!' });
     }
     else{
 

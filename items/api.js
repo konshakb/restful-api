@@ -72,7 +72,7 @@ router.get('/', (req, res, next) => {
     //  removed the => and replaced with async and it worked.
     var contype = req.headers['content-type'];
     if (contype==='application/json') {
-        getModel().list(item,3, req.query.pageToken, (err, entities, cursor) => {
+        getModel().list(item,5, req.query.pageToken, (err, entities, cursor) => {
             if (err) {
                 next(err);
                 return;

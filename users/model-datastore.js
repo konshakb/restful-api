@@ -20,8 +20,8 @@ const config = require('../config');
 const ds = Datastore({
     projectId: config.get('GCLOUD_PROJECT')
 });
-const kind = 'Ship';
-const kind2 = 'Slip';
+const kind = 'User';
+//const kind2 = 'Slip';
 // [END config]
 
 // Translates from Datastore's entity format to
@@ -89,9 +89,9 @@ function toDatastore (obj, nonIndexed) {
 // return per page. The ``token`` argument allows requesting additional
 // pages. The callback is invoked with ``(err, ships, nextPageToken)``.
 // [START list]
-function list (owner,limit, token, cb) {
-   // const q = ds.createQuery([kind]).limit(limit).order('name').start(token);
-    const q = ds.createQuery([kind]).limit(limit).filter('owner', '=', owner);
+function list (limit, token, cb) {
+    const q = ds.createQuery([kind]).limit(limit).order('owner').start(token);
+    //const q = ds.createQuery([kind]).limit(limit).filter('owner', '=', owner);
     //  console.log(q);
     //  console.log(q);
 
@@ -156,7 +156,7 @@ function update (id, data, cb) {
         //        data.id = entity.key.id;
         //cursor = req.protocol + "://"+req.get("host") + req.baseUrl + next + cursor;
         
-                data.self = "https://cargoships-220516.appspot.com/api/ships/"+entity.key.id;
+                data.self = "https://wishlistfinal.appspot.com/api/users/"+entity.key.id;
                     //cargoships-220516.appspot.com/api/shipsor (var i = new_ship.cargo.length-1; i >= 0; i--) {
                 key = ds.key([kind, parseInt(entity.key.id, 10)]);
                 entity = {
