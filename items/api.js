@@ -112,16 +112,17 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     var contype = req.headers['content-type'];
     if (contype==='application/json') {
-        let weight=req.body.weight;
-        let content=req.body.content;
+        let name=req.body.name;
+        let description=req.body.description;
+        let price=req.body.price
         //let arrival_date=req.body.arrival;
-        const new_item = {"weight": req.body.weight, "delivery_date": null, "content": req.body.content}
+        const new_item = {"name": req.body.name, "description": req.body.description, "price": req.body.price}
         //const new_item = {"number": req.body.number, "arrival_date": null, "current_boat": null}
-        if (!weight || isNaN(weight)||!content ) {
-            return res.status(400).end("request must include weight (a number) and content");
+        if (!name || !price || isNaN(price) || !description ) {
+            return res.status(400).end("request must include name description and price");
         }
         else {
-            new_item.carrier={"id": null, "name": null, "self": null};
+  //          new_item.carrier={"id": null, "name": null, "self": null};
 
             getModel().create(item, new_item, (err, entity) => {
                 if (err) {
@@ -290,8 +291,9 @@ router.put('/:item', (req, res, next) => {
         console.log(req.params.item);
         console.log(req.body);
         //let number=req.body.number;
-        let weight = req.body.weight;
-        let content = req.body.content
+        let name = req.body.name;
+        let description = req.body.description;
+        let price = req.body.price;
 
     getModel().read(item, req.params.item, (err, entity) => {
         if (err) {
@@ -302,9 +304,9 @@ router.put('/:item', (req, res, next) => {
         var testing = (JSON.stringify(entity));
         var obj = JSON.parse(testing);
         //const new_item = {"number": req.body.number, "arrival_date": obj.arrival_date, "current_boat": obj.current_boat}
-        const new_item = {"self": obj.self, "weight": req.body.weight, "delivery_date": obj.delivery_date, "content": req.body.content, "carrier": obj.carrier}
-        if (!weight || !content)  {
-            return res.status(400).end("request must include updated weight and updated content");
+        const new_item = {"self": obj.self, "name": req.body.name, "description": req.body.description, "price": req.body.price}
+        if (!name || !description || !price)  {
+            return res.status(400).end("request must include updated name description and price");
         }
         else {
             // getModel().lists(number, item,10, req.query.pageToken, (err, entities, cursor) => {
@@ -362,7 +364,7 @@ router.delete('/:item', (req, res, next) => {
                 if(Object.keys(entities).length!=0) {
                     var testing = (JSON.stringify(entities));
                     var obj = JSON.parse(testing);
-                    const new_list = {"name": obj[0].name, "type": obj[0].type, "length": obj[0].length, "item": obj[0].item, "self": obj[0].self};
+                    const new_list = {"owner": obj[0].owner, "type": obj[0].type, "name": obj[0].name, "item": obj[0].item, "self": obj[0].self};
                     //var itemlist = {"id": obj.id, "self": obj.self};
                     for (var i = new_list.item.length-1; i >= 0; i--) {
                         if (new_list.item[i].id==req.params.item) {
