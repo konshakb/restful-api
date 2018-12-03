@@ -410,7 +410,40 @@ router.put('/:list', (req, res, next) => {
  *
  * Delete a list.
  */
-router.delete('/:list', (req, res, next) => {
+router.delete('/:list', jwtCheck, (req, res, next) => {
+        var contype = req.headers['content-type'];
+       if (contype==='application/json') {
+    getModel().read(req.params.list, (err, entity) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        var owner = req.user.sub.slice(6)
+        console.log(owner);
+    console.log(entity.owner);
+    if(owner!=entity.owner)
+    {
+        res.status(403).json({ message: 'Cannot delete another user\'s list!' });
+    }
+    else
+    {
+
+
+
+        getModel().delete(req.params.list, (err) => {
+            if (err) {
+                next(err);
+                return;
+            }
+        });
+        //res.json(entity);
+        res.status(204).json({ message: 'No Content' });
+    }
+    });
+        } else { res.status(406).send('Header must be application/json'); }
+});
+/*
+router.delete('/:list', jwtCheck, (req, res, next) => {
         var contype = req.headers['content-type'];
        if (contype==='application/json') {
     getModel().delete(req.params.list, (err) => {
@@ -449,6 +482,7 @@ router.delete('/:list', (req, res, next) => {
     });
         } else { res.status(406).send('Header must be application/json'); }
 });
+*/
 
 /**
  * Errors on "/api/lists/*" routes.
